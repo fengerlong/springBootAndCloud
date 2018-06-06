@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.cdsunrise.alps.ewp.eiamanage.repository.PersonInformationMapper" >
+  <resultMap id="BaseResultMap" type="net.cdsunrise.alps.ewp.eiamanage.entity.PersonInformation" >
+    <id column="id_" property="id" jdbcType="VARCHAR" />
+    <result column="project_id_" property="projectId" jdbcType="VARCHAR" />
+    <result column="project_name_" property="projectName" jdbcType="VARCHAR" />
+    <result column="organization_id_" property="organizationId" jdbcType="VARCHAR" />
+    <result column="organization_name_" property="organizationName" jdbcType="VARCHAR" />
+    <result column="person_id_" property="personId" jdbcType="VARCHAR" />
+    <result column="person_name_" property="personName" jdbcType="VARCHAR" />
+    <result column="role_id_" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_name_" property="roleName" jdbcType="VARCHAR" />
+    <result column="title_id_" property="titleId" jdbcType="VARCHAR" />
+    <result column="title_name_" property="titleName" jdbcType="VARCHAR" />
+    <result column="create_time_" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="edit_time_" property="editTime" jdbcType="TIMESTAMP" />
+    <result column="version_" property="version" jdbcType="INTEGER" />
+    <result column="is_del_" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id_, project_id_, project_name_, organization_id_, organization_name_, person_id_, 
+    person_name_, role_id_, role_name_, title_id_, title_name_, create_time_, edit_time_, 
+    version_, is_del_
+  </sql>
+  <select id="getListByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from person_information
+    WHERE is_del_ = 0
+    <if test="name != null" >
+      and person_name_ like CONCAT("%",#{name},"%")
+    </if>
+    LIMIT #{pageNumber},#{pageSize}
+  </select>
+
+  <select id="getListByPageCount" resultType="java.lang.Integer">
+    select
+    count(id_)
+    from person_information
+    WHERE is_del_ = 0
+    <if test="name != null" >
+      and person_name_ like CONCAT("%",#{name},"%")
+    </if>
+  </select>
+
+  <select id="getListByPageHelper" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from person_information
+    WHERE is_del_ = 0
+    <if test="name != null" >
+      and person_name_ like CONCAT("%",#{name},"%")
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from person_information
+    where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from person_information
+    where id_ = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.PersonInformation" >
+    insert into person_information (id_, project_id_, project_name_, 
+      organization_id_, organization_name_, person_id_, 
+      person_name_, role_id_, role_name_, 
+      title_id_, title_name_, create_time_, 
+      edit_time_, version_, is_del_
+      )
+    values (#{id,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
+      #{organizationId,jdbcType=VARCHAR}, #{organizationName,jdbcType=VARCHAR}, #{personId,jdbcType=VARCHAR}, 
+      #{personName,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, 
+      #{titleId,jdbcType=VARCHAR}, #{titleName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{editTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.PersonInformation" >
+    insert into person_information
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id_,
+      </if>
+      <if test="projectId != null" >
+        project_id_,
+      </if>
+      <if test="projectName != null" >
+        project_name_,
+      </if>
+      <if test="organizationId != null" >
+        organization_id_,
+      </if>
+      <if test="organizationName != null" >
+        organization_name_,
+      </if>
+      <if test="personId != null" >
+        person_id_,
+      </if>
+      <if test="personName != null" >
+        person_name_,
+      </if>
+      <if test="roleId != null" >
+        role_id_,
+      </if>
+      <if test="roleName != null" >
+        role_name_,
+      </if>
+      <if test="titleId != null" >
+        title_id_,
+      </if>
+      <if test="titleName != null" >
+        title_name_,
+      </if>
+      <if test="createTime != null" >
+        create_time_,
+      </if>
+      <if test="editTime != null" >
+        edit_time_,
+      </if>
+      <if test="version != null" >
+        version_,
+      </if>
+      <if test="isDel != null" >
+        is_del_,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null" >
+        #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationName != null" >
+        #{organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null" >
+        #{personId,jdbcType=VARCHAR},
+      </if>
+      <if test="personName != null" >
+        #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="titleId != null" >
+        #{titleId,jdbcType=VARCHAR},
+      </if>
+      <if test="titleName != null" >
+        #{titleName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null" >
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.PersonInformation" >
+    update person_information
+    <set >
+      <if test="projectId != null" >
+        project_id_ = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        project_name_ = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null" >
+        organization_id_ = #{organizationId,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationName != null" >
+        organization_name_ = #{organizationName,jdbcType=VARCHAR},
+      </if>
+      <if test="personId != null" >
+        person_id_ = #{personId,jdbcType=VARCHAR},
+      </if>
+      <if test="personName != null" >
+        person_name_ = #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        role_id_ = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null" >
+        role_name_ = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="titleId != null" >
+        title_id_ = #{titleId,jdbcType=VARCHAR},
+      </if>
+      <if test="titleName != null" >
+        title_name_ = #{titleName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time_ = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null" >
+        edit_time_ = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version_ = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del_ = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.PersonInformation" >
+    update person_information
+    set project_id_ = #{projectId,jdbcType=VARCHAR},
+      project_name_ = #{projectName,jdbcType=VARCHAR},
+      organization_id_ = #{organizationId,jdbcType=VARCHAR},
+      organization_name_ = #{organizationName,jdbcType=VARCHAR},
+      person_id_ = #{personId,jdbcType=VARCHAR},
+      person_name_ = #{personName,jdbcType=VARCHAR},
+      role_id_ = #{roleId,jdbcType=VARCHAR},
+      role_name_ = #{roleName,jdbcType=VARCHAR},
+      title_id_ = #{titleId,jdbcType=VARCHAR},
+      title_name_ = #{titleName,jdbcType=VARCHAR},
+      create_time_ = #{createTime,jdbcType=TIMESTAMP},
+      edit_time_ = #{editTime,jdbcType=TIMESTAMP},
+      version_ = #{version,jdbcType=INTEGER},
+      is_del_ = #{isDel,jdbcType=INTEGER}
+    where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

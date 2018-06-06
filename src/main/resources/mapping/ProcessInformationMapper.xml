@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.cdsunrise.alps.ewp.eiamanage.repository.ProcessInformationMapper" >
+  <resultMap id="BaseResultMap" type="net.cdsunrise.alps.ewp.eiamanage.entity.ProcessInformation" >
+    <id column="id_" property="id" jdbcType="VARCHAR" />
+    <result column="project_id_" property="projectId" jdbcType="VARCHAR" />
+    <result column="project_name_" property="projectName" jdbcType="VARCHAR" />
+    <result column="message_theme_" property="messageTheme" jdbcType="VARCHAR" />
+    <result column="type_id_" property="typeId" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="state_id" property="stateId" jdbcType="VARCHAR" />
+    <result column="state_name" property="stateName" jdbcType="VARCHAR" />
+    <result column="content_" property="content" jdbcType="VARCHAR" />
+    <result column="submitter_id_" property="submitterId" jdbcType="VARCHAR" />
+    <result column="submitter_name_" property="submitterName" jdbcType="VARCHAR" />
+    <result column="create_time_" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="edit_time_" property="editTime" jdbcType="TIMESTAMP" />
+    <result column="version_" property="version" jdbcType="INTEGER" />
+    <result column="is_del_" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="ProcessListMap" type="net.cdsunrise.alps.ewp.eiamanage.returnEntity.ProcessInformationReturns">
+    <id column="id_" property="id" jdbcType="VARCHAR" />
+    <result column="project_id_" property="projectId" jdbcType="VARCHAR" />
+    <result column="project_name_" property="projectName" jdbcType="VARCHAR" />
+    <result column="message_theme_" property="messageTheme" jdbcType="VARCHAR" />
+    <result column="type_id_" property="typeId" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="state_id" property="stateId" jdbcType="VARCHAR" />
+    <result column="state_name" property="stateName" jdbcType="VARCHAR" />
+    <result column="content_" property="content" jdbcType="VARCHAR" />
+    <result column="submitter_id_" property="submitterId" jdbcType="VARCHAR" />
+    <result column="submitter_name_" property="submitterName" jdbcType="VARCHAR" />
+    <result column="create_time_" property="createTime" jdbcType="TIMESTAMP" />
+    <collection property="materialsReturnsList" ofType="net.cdsunrise.alps.ewp.eiamanage.returnEntity.MaterialsReturns"
+                column="id_" select="net.cdsunrise.alps.ewp.eiamanage.repository.MaterialsMapper.getListByProjectId"></collection>
+  </resultMap>
+
+  <resultMap id="LineChartMap" type="net.cdsunrise.alps.ewp.eiamanage.returnEntity.LineChartReturns">
+    <result column="state_name" jdbcType="VARCHAR" property="stateName" />
+    <result column="create_time_" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id_, project_id_, project_name_, message_theme_, type_id_, type_name, state_id, state_name, 
+    content_, submitter_id_, submitter_name_, create_time_, edit_time_, version_, is_del_
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from process_information
+    where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getLineChart" resultMap="LineChartMap">
+    select
+    <include refid="Base_Column_List" />
+    from process_information
+    where project_id_ = #{id,jdbcType=VARCHAR} and is_del_ = 0
+    order by create_time_
+  </select>
+
+  <select id="getListByPageHelper" resultMap="ProcessListMap">
+    select
+    <include refid="Base_Column_List" />
+    from process_information
+    where is_del_ = 0
+    <if test="startTime != null">
+      and create_time_ >= #{startTime}
+    </if>
+    <if test="endTime != null">
+      and #{endTime} >= create_time_
+    </if>
+    order by create_time_ DESC
+  </select>
+
+  <select id="getDetails" resultMap="ProcessListMap">
+    select
+    <include refid="Base_Column_List" />
+    from process_information
+    where is_del_ = 0 and id_ = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from process_information
+    where id_ = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.ProcessInformation" >
+    insert into process_information (id_, project_id_, project_name_, 
+      message_theme_, type_id_, type_name, 
+      state_id, state_name, content_, 
+      submitter_id_, submitter_name_, create_time_, 
+      edit_time_, version_, is_del_
+      )
+    values (#{id,jdbcType=VARCHAR}, #{projectId,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
+      #{messageTheme,jdbcType=VARCHAR}, #{typeId,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, 
+      #{stateId,jdbcType=VARCHAR}, #{stateName,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{submitterId,jdbcType=VARCHAR}, #{submitterName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{editTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.ProcessInformation" >
+    insert into process_information
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id_,
+      </if>
+      <if test="projectId != null" >
+        project_id_,
+      </if>
+      <if test="projectName != null" >
+        project_name_,
+      </if>
+      <if test="messageTheme != null" >
+        message_theme_,
+      </if>
+      <if test="typeId != null" >
+        type_id_,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="stateId != null" >
+        state_id,
+      </if>
+      <if test="stateName != null" >
+        state_name,
+      </if>
+      <if test="content != null" >
+        content_,
+      </if>
+      <if test="submitterId != null" >
+        submitter_id_,
+      </if>
+      <if test="submitterName != null" >
+        submitter_name_,
+      </if>
+      <if test="createTime != null" >
+        create_time_,
+      </if>
+      <if test="editTime != null" >
+        edit_time_,
+      </if>
+      <if test="version != null" >
+        version_,
+      </if>
+      <if test="isDel != null" >
+        is_del_,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTheme != null" >
+        #{messageTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="stateId != null" >
+        #{stateId,jdbcType=VARCHAR},
+      </if>
+      <if test="stateName != null" >
+        #{stateName,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="submitterId != null" >
+        #{submitterId,jdbcType=VARCHAR},
+      </if>
+      <if test="submitterName != null" >
+        #{submitterName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null" >
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.ProcessInformation" >
+    update process_information
+    <set >
+      <if test="projectId != null" >
+        project_id_ = #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        project_name_ = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTheme != null" >
+        message_theme_ = #{messageTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id_ = #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="stateId != null" >
+        state_id = #{stateId,jdbcType=VARCHAR},
+      </if>
+      <if test="stateName != null" >
+        state_name = #{stateName,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content_ = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="submitterId != null" >
+        submitter_id_ = #{submitterId,jdbcType=VARCHAR},
+      </if>
+      <if test="submitterName != null" >
+        submitter_name_ = #{submitterName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time_ = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null" >
+        edit_time_ = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version_ = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del_ = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.ProcessInformation" >
+    update process_information
+    set project_id_ = #{projectId,jdbcType=VARCHAR},
+      project_name_ = #{projectName,jdbcType=VARCHAR},
+      message_theme_ = #{messageTheme,jdbcType=VARCHAR},
+      type_id_ = #{typeId,jdbcType=VARCHAR},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      state_id = #{stateId,jdbcType=VARCHAR},
+      state_name = #{stateName,jdbcType=VARCHAR},
+      content_ = #{content,jdbcType=VARCHAR},
+      submitter_id_ = #{submitterId,jdbcType=VARCHAR},
+      submitter_name_ = #{submitterName,jdbcType=VARCHAR},
+      create_time_ = #{createTime,jdbcType=TIMESTAMP},
+      edit_time_ = #{editTime,jdbcType=TIMESTAMP},
+      version_ = #{version,jdbcType=INTEGER},
+      is_del_ = #{isDel,jdbcType=INTEGER}
+    where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

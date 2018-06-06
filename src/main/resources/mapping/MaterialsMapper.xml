@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="net.cdsunrise.alps.ewp.eiamanage.repository.MaterialsMapper" >
+  <resultMap id="BaseResultMap" type="net.cdsunrise.alps.ewp.eiamanage.entity.Materials" >
+    <id column="id_" property="id" jdbcType="VARCHAR" />
+    <result column="relevance_id_" property="relevanceId" jdbcType="VARCHAR" />
+    <result column="materials_address_" property="materialsAddress" jdbcType="VARCHAR" />
+    <result column="materials_name_" property="materialsName" jdbcType="VARCHAR" />
+    <result column="materials_type_" property="materialsType" jdbcType="INTEGER" />
+    <result column="upload_person_id_" property="uploadPersonId" jdbcType="VARCHAR" />
+    <result column="upload_person_name_" property="uploadPersonName" jdbcType="VARCHAR" />
+    <result column="create_time_" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="edit_time_" property="editTime" jdbcType="TIMESTAMP" />
+    <result column="version_" property="version" jdbcType="INTEGER" />
+    <result column="is_del_" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+
+  <resultMap id="MaterialsReturnsMap" type="net.cdsunrise.alps.ewp.eiamanage.returnEntity.MaterialsReturns">
+    <id column="id_" property="id" jdbcType="VARCHAR" />
+    <result column="materials_address_" property="address" jdbcType="VARCHAR" />
+    <result column="materials_name_" property="name" jdbcType="VARCHAR" />
+    <result column="materials_type_" property="type" jdbcType="INTEGER" />
+    <result column="upload_person_id_" property="submiterId" jdbcType="VARCHAR" />
+    <result column="upload_person_name_" property="submiterName" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id_, relevance_id_, materials_address_, materials_name_, materials_type_, upload_person_id_, 
+    upload_person_name_, create_time_, edit_time_, version_, is_del_
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from materials
+    where id_ = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from materials
+    where id_ = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="getListByProjectId" parameterType="java.lang.String" resultMap="MaterialsReturnsMap">
+    select
+    <include refid="Base_Column_List" />
+    from materials
+    where relevance_id_ = #{projectId,jdbcType=VARCHAR} and is_del_ = 0
+  </select>
+
+  <delete id="deleteByRelevanceId" parameterType="java.lang.String">
+    delete from materials
+    where relevance_id_ = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.Materials" >
+    insert into materials (id_, relevance_id_, materials_address_, 
+      materials_name_, materials_type_, upload_person_id_, 
+      upload_person_name_, create_time_, edit_time_, 
+      version_, is_del_)
+    values (#{id,jdbcType=VARCHAR}, #{relevanceId,jdbcType=VARCHAR}, #{materialsAddress,jdbcType=VARCHAR}, 
+      #{materialsName,jdbcType=VARCHAR}, #{materialsType,jdbcType=INTEGER}, #{uploadPersonId,jdbcType=VARCHAR}, 
+      #{uploadPersonName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{editTime,jdbcType=TIMESTAMP}, 
+      #{version,jdbcType=INTEGER}, #{isDel,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.Materials" >
+    insert into materials
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id_,
+      </if>
+      <if test="relevanceId != null" >
+        relevance_id_,
+      </if>
+      <if test="materialsAddress != null" >
+        materials_address_,
+      </if>
+      <if test="materialsName != null" >
+        materials_name_,
+      </if>
+      <if test="materialsType != null" >
+        materials_type_,
+      </if>
+      <if test="uploadPersonId != null" >
+        upload_person_id_,
+      </if>
+      <if test="uploadPersonName != null" >
+        upload_person_name_,
+      </if>
+      <if test="createTime != null" >
+        create_time_,
+      </if>
+      <if test="editTime != null" >
+        edit_time_,
+      </if>
+      <if test="version != null" >
+        version_,
+      </if>
+      <if test="isDel != null" >
+        is_del_,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="relevanceId != null" >
+        #{relevanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsAddress != null" >
+        #{materialsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsName != null" >
+        #{materialsName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsType != null" >
+        #{materialsType,jdbcType=INTEGER},
+      </if>
+      <if test="uploadPersonId != null" >
+        #{uploadPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadPersonName != null" >
+        #{uploadPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null" >
+        #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.Materials" >
+    update materials
+    <set >
+      <if test="relevanceId != null" >
+        relevance_id_ = #{relevanceId,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsAddress != null" >
+        materials_address_ = #{materialsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsName != null" >
+        materials_name_ = #{materialsName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialsType != null" >
+        materials_type_ = #{materialsType,jdbcType=INTEGER},
+      </if>
+      <if test="uploadPersonId != null" >
+        upload_person_id_ = #{uploadPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadPersonName != null" >
+        upload_person_name_ = #{uploadPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time_ = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editTime != null" >
+        edit_time_ = #{editTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version_ = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="isDel != null" >
+        is_del_ = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="net.cdsunrise.alps.ewp.eiamanage.entity.Materials" >
+    update materials
+    set relevance_id_ = #{relevanceId,jdbcType=VARCHAR},
+      materials_address_ = #{materialsAddress,jdbcType=VARCHAR},
+      materials_name_ = #{materialsName,jdbcType=VARCHAR},
+      materials_type_ = #{materialsType,jdbcType=INTEGER},
+      upload_person_id_ = #{uploadPersonId,jdbcType=VARCHAR},
+      upload_person_name_ = #{uploadPersonName,jdbcType=VARCHAR},
+      create_time_ = #{createTime,jdbcType=TIMESTAMP},
+      edit_time_ = #{editTime,jdbcType=TIMESTAMP},
+      version_ = #{version,jdbcType=INTEGER},
+      is_del_ = #{isDel,jdbcType=INTEGER}
+    where id_ = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
